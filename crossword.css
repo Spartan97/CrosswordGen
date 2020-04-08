@@ -1,0 +1,100 @@
+:root {
+        --item-size: 30px;
+        --cols: 24;
+        --rows: 25;
+        --focus-color: #FFFF74;
+}
+
+.flavor {
+        background: #DDDDDD;
+        padding: 4px 8px;
+}
+
+/* Board and Highlighting */
+.crossword-board-container {
+        position: relative;
+        background: #FFFFFF;
+        height: calc(var(--rows) * var(--item-size));
+}
+.crossword-board {
+        position: absolute;
+        z-index: 1;
+        background: transparent;
+        border: 1px solid #000000;
+        width: calc(var(--cols) * var(--item-size));
+        height: calc(var(--rows) * var(--item-size));
+        display: grid;
+        grid-template: repeat(var(--rows),calc(100% / var(--rows))) / repeat(var(--cols),calc(100% / var(--cols)));
+        list-style-type: none;
+        padding: 0;
+        margin: 0 auto;
+        z-index: 100;
+}
+.crossword-board__item {
+        border: 1px solid #000000;
+        background: transparent;
+        position: relative;
+        z-index: 100;
+        text-align: center;
+        font-size: 16px;
+        font-weight: bold;
+        text-transform: uppercase;
+}
+.crossword-board__item.marked {
+        background: var(--focus-color);
+}
+.crossword-board__item:focus
+{
+        background: var(--focus-color);
+        border: 1px solid #000000;
+        outline: 1px solid #000000;
+}
+.crossword-board__item--blank {
+        background: #000000;
+        border: 1px solid #000000;
+        outline: 1px solid #000000;
+}
+
+/* Item Labels */
+.crossword-board--labels {
+        position: absolute;
+        z-index: 60;
+}
+.crossword-board__item-label {
+        position: relative;
+}
+.crossword-board__item-label-text {
+        position: absolute;
+        margin-top: 2px;
+        margin-left: 2px;
+        font-size: 10px;
+        line-height: 1;
+}
+
+/* Clues List */
+.crossword-clues {
+        position: absolute;
+        margin-left: calc(var(--item-size) * var(--cols) + 60px);
+}
+.crossword-clues__list {
+        padding: 0;
+        display: inline-block;
+        vertical-align: top;
+}
+.crossword-clues__list-title {
+        font-weight: bold;
+        padding: 4px;
+}
+.crossword-clues__list-item {
+        margin: 0;
+        padding: 4px;
+}
+.crossword-clues__list-item:before {
+        content: attr(data-number) '. ';
+}
+.crossword-clues__list-item.strikethrough {
+        text-decoration: line-through;
+}
+.crossword-clues__list-item:hover, .crossword-clues__list-item.marked {
+        background-color: var(--focus-color);
+}
