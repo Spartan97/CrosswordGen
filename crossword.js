@@ -1,4 +1,5 @@
 var typingDirection = "across";
+var fShift = false;
 
 $(document).ready(function() {
         // When a clue is double clicked, cross it out (or un-cross it)
@@ -112,31 +113,60 @@ $(document).ready(function() {
         }
 
         $(".crossword-board__item").on("keydown", function(e) {
-                if (e.keyCode == 37) // left
+                if (e.keyCode == 37) { // left
                         move(this, 0, -1);
-                else if (e.keyCode == 38) // up
+                        typingDirection = "across";
+                }
+                else if (e.keyCode == 38) { // up
                         move(this, -1, 0);
-                else if (e.keyCode == 39) // right
+                        typingDirection = "down";
+                }
+                else if (e.keyCode == 39) { // right
                         move(this, 0, 1);
-                else if (e.keyCode == 40) // down
+                        typingDirection = "across";
+                }
+                else if (e.keyCode == 40) { // down
                         move(this, 1, 0);
+                        typingDirection = "down";
+                }
                 else if (e.keyCode == 9) { // tab
                         var label = $(this).attr("id");
                         var row = parseInt(label.split("-")[0].substr(4));
                         var col = parseInt(label.split("-")[1]);
 
-                        var label = FindLabelVertical(row, col);
-                        if ($(label).length === 0) {
+                        var label;
+                        if (typingDirection === "across") {
                                 label = FindLabelHorizontal(row, col);
+                                if ($(label).length === 0) {
+                                        label = FindLabelVertical(row, col);
+                                }
+                        }
+                        else { // typingDirection === "down"
+                                label = FindLabelVertical(row, col);
+                                if ($(label).length === 0) {
+                                        label = FindLabelHorizontal(row, col);
+                                }
                         }
                         if ($(label).length !== 0) {
-                                var next = parseInt($(label).data("number")) + 1;
+                                var next = parseInt($(label).data("number")) + (fShift ? -1 : 1);
 
-                                if ($("*[data-number='" + next + "']").length === 0)
-                                        next = 1;
+                                if ($("*[data-number='" + next + "']").length === 0) {
+                                        if (!fShift) next = 1;
+                                        else {
+                                                var nums = $("dd").map(function() {
+                                                        return $(this).data("number");
+                                                }).get();
+                                                next = Math.max.apply(Math, nums);
+                                        }
+                                }
 
-                                next = $("*[data-number='" + next + "']");
+                                next = "*[data-number='" + next + "']";
                                 $("#item" + $(next).data("row") + "-" + $(next).data("col")).focus();
+
+                                if ($(next).attr("class").indexOf("across") === -1)
+                                        typingDirection = "down";
+                                else
+                                        typingDirection = "across";
 
                                 e.preventDefault();
                         }
@@ -156,7 +186,7 @@ $(document).ready(function() {
                                         }
                                 }
                         }
-                        else {
+                        else { // typingDirection === "down"
                                 if (!move(this, 1, 0)) {
                                         if (move(this, 0, 1)) {
                                                 typingDirection = "across";
@@ -171,4 +201,6 @@ $(document).ready(function() {
                         }
                 }
         });
+
+        $(document).on("keyup keydown", function(e) {fShift = e.shiftKey} );
 });
