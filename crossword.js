@@ -192,7 +192,7 @@ $(document).ready(function() {
 
         $(".crossword-board__item").on("keypress", function(e) {
                 if (e.which >= 97 && e.which <= 122) { // A-Z
-                        $(this).val($(this).val().toUpperCase());
+                        $(this).val(e.key.toUpperCase());
                         if (typingDirection === "across") {
                                 if (!move(this, 0, 1)) {
                                         if (move(this, 1, 0)) {
@@ -214,6 +214,8 @@ $(document).ready(function() {
                                 $(this).val("");
                         }
                 }
+
+                e.preventDefault();
         });
 
         $(document).on("keyup keydown", function(e) {fShift = e.shiftKey} );
