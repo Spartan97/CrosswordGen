@@ -71,6 +71,24 @@
         line-height: 1;
 }
 
+/* Extraction Labels */
+.crossword-board--extraction {
+        position: absolute;
+        z-index: 60;
+}
+.crossword-board__item-extraction {
+        position: relative;
+}
+.crossword-board__item-extraction-text {
+        position: absolute;
+        font-size: 10px;
+        float: bottom;
+        color: red;
+        line-height: 1px;
+        margin-left: 2px;
+        margin-top: 23px;
+}
+
 /* Clues List */
 .crossword-clues {
         position: absolute;

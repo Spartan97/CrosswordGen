@@ -15,32 +15,50 @@ print("<p class='flavor'><i>" + line + "</i></p>");
 print("</header>")
 author = f.readline().strip() # author
 
-row = 1
+grid = []
+line = f.readline().strip("\n")
+cols = len(line)
+while(line):
+        grid.append(list(line))
+        line = f.readline().strip("\n")
+        if len(line) == 0:
+                break
+        elif len(list(line)) != cols:
+                print("Invalid grid")
+                quit()
+
 print("<div class='crossword-board-container'>")
 print("\t<div class='crossword-board'>")
 labels_div = "\t<div class='crossword-board crossword-board--labels'>\n"
-while(line):
-        line = f.readline()
-        line = line.strip("\n")
-        col = 1
-        for char in line:
-                id = "'item%s-%s'" % (str(row), str(col))
+extraction_div = "\t<div class='crossword-board crossword-board--extraction'>\n"
+
+next_label = 1
+for row in range(len(grid)):
+        for col in range(len(grid[0])):
+                id = "'item%s-%s'" % (str(row+1), str(col+1))
+                char = grid[row][col]
                 if char != " ": # is a space to be filled in
                         print("\t\t<input id=%s class='crossword-board__item' type='text' minlength='1' maxlength='1' value='' required='required' />" % id)
-                        if char != "x": # is a label
-                                id = str(ord(char)-64)
-                                label_map[id] = (str(row), str(col))
-                                style = "grid-column: " + str(col) + "/" + str(col) + "; grid-row: " + str(row) + "/" + str(row) + ";"
-                                labels_div += "\t\t<span id='label-%s' class='crossword-board__item-label crossword-board__item-label--%s' style='%s'><span class='crossword-board__item-label-text'>%s</span></span>\n" % (id, id, style, id)
+                        if (row > 0 and grid[row-1][col] == " " and row < len(grid)-1 and grid[row+1][col] != " ") or (col > 0 and grid[row][col-1] == " " and col < len(grid[0])-1 and grid[row][col+1] != " "): # is a label
+                                label_map[next_label] = (str(row+1), str(col+1))
+                                style = "grid-column: " + str(col+1) + "/" + str(col+1) + "; grid-row: " + str(row+1) + "/" + str(row+1) + ";"
+                                labels_div += "\t\t<span id='label-%s' class='crossword-board__item-label crossword-board__item-label--%s' style='%s'><span class='crossword-board__item-label-text'>%s</span></span>\n" % (next_label, next_label, style, next_label)
+                                next_label += 1
+
+                        if char >= "A" and char <= "Z": # extaction labels
+                                ordchar = str(ord(char)-64)
+                                style = "grid-column: " + str(col+1) + "/" + str(col+1) + "; grid-row: " + str(row+1) + "/" + str(row+1) + ";"
+                                extraction_div += "\t\t<span id='extraction-%s' class='crossword-board__item-extraction crossword-board__item-extraction--%s' style='%s'><span class='crossword-board__item-extraction-text'>%s</span></span>\n" % (ordchar, ordchar, style, ordchar)
                 else: # is a black square
                         print("\t\t<span class='crossword-board__item--blank' id=%s></span>" % id)
-                col += 1
-        row += 1
+
 print("\t</div>")
 f.close()
 
 labels_div += "\t</div>"
+extraction_div += "\t</div>"
 print(labels_div)
+print(extraction_div)
 
 print("\t<div class='crossword-clues'>")
 print("\t\t<p><i>Double-click a clue to mark as completed</i></p>")
@@ -58,8 +76,8 @@ for line in f:
                 print("\t\t<dl class='crossword-clues__list crossword-clues__list--down'>")
                 print("\t\t\t<dt class='crossword-clues__list-title'>Down</dt>")
         elif line:
-                num = line.split(" ")[0]
-                clue = " ".join(line.split(" ")[1:])
+                num = int(line.split(" ")[0])
+                clue = "".join(line.split(" ")[1:])
                 print("\t\t\t<dd class='crossword-clues__list-item crossword-clues__list-item--%s-%s' data-number='%s' data-row='%s' data-col='%s'>%s</dd>" % (dir, num, num, label_map[num][0], label_map[num][1], clue))
 
 print("\t\t</dl>")
