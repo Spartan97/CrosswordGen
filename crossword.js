@@ -7,6 +7,16 @@ $(document).ready(function() {
                 $(this).toggleClass("strikethrough");
         });
 
+        $(".crossword-extraction__value").hover(function() {
+                var label = $(".crossword-board__item-extraction--" + $(this).data("number"));
+                var row = $(label).css("grid-row-start");
+                var col = $(label).css("grid-column-start");
+
+                $("#item" + row + "-" + col).addClass("marked");
+        }, function() {
+                $(".crossword-board__item").removeClass("marked");
+        });
+
         // When a clue is hovered, highlight its squares in the grid
         $("dd").hover(function() {
                 var label = $("#label-" + $(this).data("number"));
@@ -17,6 +27,7 @@ $(document).ready(function() {
                 var square = $("#item" + row.toString() + "-" + col.toString());
                 while (!$(square).hasClass("crossword-board__item--blank")) {
                         $(square).addClass("marked")
+                        $("#extraction" +  row.toString() + "-" + col.toString()).addClass("marked");
 
                         if (across) col += 1;
                         else row += 1
@@ -24,6 +35,7 @@ $(document).ready(function() {
                 }
         }, function() {
                 $(".crossword-board__item").removeClass("marked");
+                $(".crossword-extraction__value").removeClass("marked");
         });
 
         $("dd").click(function() {
@@ -32,6 +44,11 @@ $(document).ready(function() {
                 var col = parseInt($(label).css("grid-column-start"));
 
                 var across = this.className.indexOf("across") >= 0;
+                if (across)
+                        typingDirection = "across";
+                else
+                        typingDirection = "down";
+
                 var square = $("#item" + row.toString() + "-" + col.toString());
                 if (!$(square).hasClass("crossword-board__item--blank")) {
                         $(square).focus();
@@ -45,7 +62,7 @@ $(document).ready(function() {
                         row -= 1;
                         square = $("#item" + (row-1).toString() + "-" + col.toString());
                 }
-                return "*[data-row='" + row.toString() + "'][data-col='" + col.toString() + "']";
+                return "dd[data-row='" + row.toString() + "'][data-col='" + col.toString() + "']";
         }
 
         function FindLabelHorizontal(row, col) {
@@ -54,7 +71,7 @@ $(document).ready(function() {
                         col -= 1;
                         square = $("#item" + row.toString() + "-" + (col-1).toString());
                 }
-                return "*[data-row='" + row.toString() + "'][data-col='" + col.toString() + "']";
+                return "dd[data-row='" + row.toString() + "'][data-col='" + col.toString() + "']";
         }
 
         // When an input box is selected, the appropriate clue(s) are highlighted too
@@ -62,6 +79,8 @@ $(document).ready(function() {
                 var label = $(this).attr("id");
                 var row = parseInt(label.split("-")[0].substr(4));
                 var col = parseInt(label.split("-")[1]);
+
+                $("#extraction" + row.toString() + "-" + col.toString()).addClass("marked");
 
                 // Check up for a label
                 label = FindLabelVertical(row, col);
@@ -73,6 +92,7 @@ $(document).ready(function() {
         });
         $(".crossword-board__item").focusout(function() {
                 $(".crossword-clues__list-item").removeClass("marked");
+                $(".crossword-extraction__value").removeClass("marked");
         });
 
         $(".clear").click(function() {
@@ -110,6 +130,19 @@ $(document).ready(function() {
                 }
 
                 return false;
+        }
+
+        function UpdateExtraction(elem) {
+                // Keep the extraction in sync with the board
+                var label = $(elem).attr("id");
+                var row = label.split("-")[0].substr(4);
+                var col = label.split("-")[1];
+
+                var value = $(elem).val();
+                if (value === "")
+                        value = "_";
+
+                $("#extraction" + row + "-" + col).text(value);
         }
 
         $(".crossword-board__item").on("keydown", function(e) {
@@ -171,7 +204,7 @@ $(document).ready(function() {
                                 e.preventDefault();
                         }
                 }
-                else if (e.keyCode == 8) { // backspace
+                else if (e.keyCode == 8 || e.keyCode == 46) { // backspace/delete
                         if ($(this).val() === "") {
                                 var label = $(this).attr("id");
                                 var row = parseInt(label.split("-")[0].substr(4));
@@ -184,6 +217,10 @@ $(document).ready(function() {
                                         move(this, -1, 0);
                                 }
                         }
+                        else {
+                                $(this).val("");
+                                UpdateExtraction(this);
+                        }
                 }
                 else if ($(this).val() && (e.keyCode >= 65 && e.keyCode <= 90)) { // clear existing letter for new one
                         $(this).val("");
@@ -193,6 +230,8 @@ $(document).ready(function() {
         $(".crossword-board__item").on("keypress", function(e) {
                 if (e.which >= 97 && e.which <= 122) { // A-Z
                         $(this).val(e.key.toUpperCase());
+                        UpdateExtraction(this);
+
                         if (typingDirection === "across") {
                                 if (!move(this, 0, 1)) {
                                         if (move(this, 1, 0)) {
@@ -212,10 +251,17 @@ $(document).ready(function() {
                         var currVal = $(this).val();
                         if (currVal && (currVal.charCodeAt(0) < 65 || currVal.charCodeAt(0) > 90)) {
                                 $(this).val("");
+                                UpdateExtraction(this);
                         }
                 }
 
                 e.preventDefault();
+        });
+
+        $(".crossword-board__item").on("keyup", function(e) {
+                if (e.which == 8 || e.which == 46) {
+                        UpdateExtraction(this);
+                }
         });
 
         $(document).on("keyup keydown", function(e) {fShift = e.shiftKey} );

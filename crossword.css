@@ -2,7 +2,7 @@
         --item-size: 30px;
         --cols: 24;
         --rows: 25;
-        --focus-color: #FFFF74;
+        --focus-color: rgba(255, 255, 116, .5);
 }
 
 .flavor {
@@ -82,7 +82,6 @@
 .crossword-board__item-extraction-text {
         position: absolute;
         font-size: 10px;
-        float: bottom;
         color: red;
         line-height: 1px;
         margin-left: 2px;
@@ -114,5 +113,12 @@
         text-decoration: line-through;
 }
 .crossword-clues__list-item:hover, .crossword-clues__list-item.marked {
+        background-color: var(--focus-color);
+}
+
+.crossword-extraction__value {
+        font-family: "Lucida Console", Monaco, monospace;
+}
+.crossword-extraction__value:hover, .crossword-extraction__value.marked {
         background-color: var(--focus-color);
 }

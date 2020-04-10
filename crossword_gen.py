@@ -5,6 +5,7 @@ print("<html>")
 print("<head><link rel='stylesheet' href='crossword.css'><script src='https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js'></script><script src='crossword.js' type='text/javascript'></script></head>")
 
 label_map = {}
+extraction_map = {}
 
 f = open("crossword.txt", "r")
 line = f.readline().strip() # title
@@ -47,6 +48,7 @@ for row in range(len(grid)):
 
                         if char >= "A" and char <= "Z": # extaction labels
                                 ordchar = str(ord(char)-64)
+                                extraction_map[ordchar] = (str(row+1), str(col+1));
                                 style = "grid-column: " + str(col+1) + "/" + str(col+1) + "; grid-row: " + str(row+1) + "/" + str(row+1) + ";"
                                 extraction_div += "\t\t<span id='extraction-%s' class='crossword-board__item-extraction crossword-board__item-extraction--%s' style='%s'><span class='crossword-board__item-extraction-text'>%s</span></span>\n" % (ordchar, ordchar, style, ordchar)
                 else: # is a black square
@@ -82,6 +84,13 @@ for line in f:
 
 print("\t\t</dl>")
 print("\t\t<div><button class='clear'>Clear All</button></div>")
+
+print("\t\t<div class='extraction' style='margin-top:16px; font-size:48px'>")
+for key in sorted(extraction_map.keys(), key = lambda k:(int(k))):
+        value = extraction_map[key]
+        print("\t\t\t<span style='position:relative'><span id='extraction%s-%s' class='crossword-extraction__value' data-number='%s' data-row='%s' data-col='%s'>_</span><span id='extraction-label' style='margin-top:175%%;left:0%%;text-align:center;width:100%%;position:absolute;font-size:14px;color:red'>%s</span></span>" % (value[0], value[1], key, value[0], value[1], key));
+
+print("\t\t</div>")
 print("\t</div>")
 print("</div>")
 print("<footer><p>" + author + "</p></footer>")
