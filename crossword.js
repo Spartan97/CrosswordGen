@@ -171,6 +171,20 @@ $(document).ready(function() {
                                 e.preventDefault();
                         }
                 }
+                else if (e.keyCode == 8) { // backspace
+                        if ($(this).val() === "") {
+                                var label = $(this).attr("id");
+                                var row = parseInt(label.split("-")[0].substr(4));
+                                var col = parseInt(label.split("-")[1]);
+
+                                if (typingDirection == "across") {
+                                        move(this, 0, -1);
+                                }
+                                else {
+                                        move(this, -1, 0);
+                                }
+                        }
+                }
                 else if ($(this).val() && (e.keyCode >= 65 && e.keyCode <= 90)) { // clear existing letter for new one
                         $(this).val("");
                 }
