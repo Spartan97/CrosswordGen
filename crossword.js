@@ -233,7 +233,7 @@ $(document).ready(function() {
         });
 
         $(".crossword-board__item").on("keypress", function(e) {
-                if (e.which >= 97 && e.which <= 122) { // A-Z
+                if ((e.which >= 65 && e.which <= 90) || (e.which >= 97 && e.which <= 122)) { // A-Z
                         $(this).val(e.key.toUpperCase());
                         UpdateExtraction(this);
 
@@ -254,7 +254,7 @@ $(document).ready(function() {
                 }
                 else { // don't allow other characters
                         var currVal = $(this).val();
-                        if (currVal && (currVal.charCodeAt(0) < 65 || currVal.charCodeAt(0) > 90)) {
+                        if (currVal && !((currVal.charCodeAt(0) >= 65 && currVal.charCodeAt(0) <= 90) || (currVal.charCodeAt(0) >= 97 && currVal.charCodeAt(0) <= 122))) {
                                 $(this).val("");
                                 UpdateExtraction(this);
                         }
