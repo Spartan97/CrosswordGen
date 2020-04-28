@@ -1,6 +1,6 @@
 :root {
         --item-size: 30px;
-        --cols: 24;
+        --cols: 25;
         --rows: 25;
         --focus-color: rgba(255, 255, 116, .5);
 }

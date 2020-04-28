@@ -63,7 +63,7 @@ print(labels_div)
 print(extraction_div)
 
 print("\t<div class='crossword-clues'>")
-print("\t\t<p><i>Double-click a clue to mark as completed</i></p>")
+print("\t\t<p><i>Right-click a clue to mark as completed</i></p>")
 print("\t\t<dl class='crossword-clues__list crossword-clues__list--across'>")
 print("\t\t\t<dt class='crossword-clues__list-title'>Across</dt>")
 f = open("clues.txt", "r")

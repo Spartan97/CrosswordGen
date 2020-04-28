@@ -2,9 +2,10 @@ var typingDirection = "across";
 var fShift = false;
 
 $(document).ready(function() {
-        // When a clue is double clicked, cross it out (or un-cross it)
-        $("dd").dblclick(function() {
+        // When a clue is right clicked, cross it out (or un-cross it)
+        $("dd").contextmenu(function(e) {
                 $(this).toggleClass("strikethrough");
+                return false;
         });
 
         $(".crossword-extraction__value").hover(function() {
@@ -38,7 +39,11 @@ $(document).ready(function() {
                 $(".crossword-extraction__value").removeClass("marked");
         });
 
-        $("dd").click(function() {
+        $("dd").click(function(e) {
+                // Skip if this is actually a double-click
+                if (e.originalEvent.detail > 1)
+                        return;
+
                 var label = $("#label-" + $(this).data("number"));
                 var row = parseInt($(label).css("grid-row-start"));
                 var col = parseInt($(label).css("grid-column-start"));
