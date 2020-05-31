@@ -2,19 +2,18 @@
 # With codepen example here: https://codepen.io/adrianroworth/pen/OpeyZq?editors=1100
 
 print("<html>")
-print("<head><link rel='stylesheet' href='crossword.css'><script src='https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js'></script><script src='crossword.js' type='text/javascript'></script></head>")
+print("<head>")
 
 label_map = {}
 extraction_map = {}
 
 f = open("crossword.txt", "r")
-line = f.readline().strip() # title
-print("<header>")
-print("<h1>" + line + "</h1>")
-line = f.readline().strip() # flavor text
-print("<p class='flavor'><i>" + line + "</i></p>");
-print("</header>")
+title = f.readline().strip() # title
+print("<title>" + title + "</title><link href='https://fonts.googleapis.com/css?family=Orbitron' rel='stylesheet' />")
+print("<link rel='stylesheet' href='crossword.css'><script src='https://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.4.1.min.js'></script><script src='crossword.js' type='text/javascript'></script>")
+flavor = f.readline().strip() # flavor text
 author = f.readline().strip() # author
+print("</head>")
 
 grid = []
 line = f.readline().strip("\n")
@@ -27,6 +26,12 @@ while(line):
         elif len(list(line)) != cols:
                 print("Invalid grid")
                 quit()
+
+print("<body><div class='content'>")
+print("<div class='titlebar'><div class='titletext'>" + title + "</div><div class='yeartext'>20:20</div></div>")
+print("<div class='authorbar'>" + author + "</div>")
+print("<div class='flavorbar'>" + flavor + "</div>")
+print("<div class='puzzle'>")
 
 print("<div class='crossword-board-container'>")
 print("\t<div class='crossword-board'>")
@@ -92,6 +97,5 @@ for key in sorted(extraction_map.keys(), key = lambda k:(int(k))):
 
 print("\t\t</div>")
 print("\t</div>")
-print("</div>")
-print("<footer><p>" + author + "</p></footer>")
+print("</div></div></div></body>")
 print("</html>")

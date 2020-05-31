@@ -122,3 +122,52 @@
 .crossword-extraction__value:hover, .crossword-extraction__value.marked {
         background-color: var(--focus-color);
 }
+
+/* From template*/
+.content {
+         margin: 50px;
+}
+@font-face {
+         font-family: "LCD";
+         src: local(LCD), url(LCD-N___.TTF);
+}
+.titlebar {
+         background-color: #000000;
+         min-width: 500px;
+         min-height: 75px;
+         border-radius: 15px;
+         display: flex;
+         align-items: center;
+         font-family: LCD, Orbitron, "Segoe UI Black", Impact, sans-serif;
+         font-size: 48px;
+}
+.titletext {
+         color: #FF0000;
+         padding-left: 5px;
+         padding-right: 5px;
+         flex-basis: 100%
+}
+.yeartext {
+         color: #C00000;
+         padding-left: 5px;
+         padding-right: 5px;
+}
+.authorbar {
+        font-family: "Segoe UI", Arial, sans-serif;
+        font-size: 12px;
+        margin-top: 15px;
+}
+.flavorbar {
+        background-color: #EAEAEA;
+        font-family: "Segoe UI", Arial, sans-serif;
+        font-size: 18px;
+        font-style: italic;
+        min-height: 25px;
+        padding: 5px;
+        margin-top: 15px;
+}
+.puzzle {
+        font-family: "Segoe UI", Arial, sans-serif;
+        font-size: 18px;
+        margin-top: 15px;
+}
